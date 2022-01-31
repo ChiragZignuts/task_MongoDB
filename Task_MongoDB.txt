@@ -1,0 +1,158 @@
+db.createCollection("department");
+db.createCollection("employee");
+db.createCollection("salary");
+
+db.department.insertMany([
+    {
+        "dept_id" : 1,
+        "name" : "sales",
+        "createdDate" : "2021-01-01"
+    },
+    {
+        "dept_id" : 2,
+        "name" : "purchase",
+        "createdDate" : "2021-01-01"
+    },
+    {
+        "dept_id" : 3,
+        "name" : "hr",
+        "createdDate" : "2021-01-01"
+    },
+    {
+        "dept_id" : 4,
+        "name" : "account",
+        "createdDate" : "2021-01-01"
+    },
+    {
+        "dept_id" : 5,
+        "name" : "marketing",
+        "createdDate" : "2021-01-01"
+    }
+])
+
+db.employee.insertMany([
+    {
+        "emp_id" : 1,
+        "name" : "chirag",
+        "emp_no" : 1001,
+        "dept_id" : 4,
+        "join_date" : "2021-01-01",
+        "end_date" : "2022-01-01"
+    },
+    {
+        "emp_id" : 2,
+        "name" : "shivam",
+        "emp_no" : 1002,
+        "dept_id" : 5,
+        "join_date" : "2021-08-01",
+        "end_date" : "2022-01-31"
+    },
+    {
+        "emp_id" : 3,
+        "name" : "aman",
+        "emp_no" : 1003,
+        "dept_id" : 3,
+        "join_date" : "2021-01-01",
+        "end_date" : "2021-11-30"
+    },
+    {
+        "emp_id" : 4,
+        "name" : "nand",
+        "emp_no" : 1004,
+        "dept_id" : 2,
+        "join_date" : "2021-02-01",
+        "end_date" : "2021-12-01"
+    },
+    {
+        "emp_id" : 5,
+        "name" : "pujan",
+        "emp_no" : 1005,
+        "dept_id" : 1,
+        "join_date" : "2021-03-01",
+        "end_date" : "2021-09-30"
+    }
+])
+
+db.salary.insertMany([
+    {
+        "emp_id" : 1,
+        "month" : "Dec",
+        "year" : 2021,
+        "amount" : 30000,
+        "generated_date" : "2022-01-05"
+    },
+    {
+        "emp_id" : 2,
+        "month" : "Jan",
+        "year" : 2022,
+        "amount" : 18000,
+        "generated_date" : "2022-01-05"
+    },
+    {
+        "emp_id" : 3,
+        "month" : "Nov",
+        "year" : 2021,
+        "amount" : 20000,
+        "generated_date" : "2021-12-05"
+    },
+    {
+        "emp_id" : 4,
+        "month" : "Nov",
+        "year" : 2021,
+        "amount" : 25000,
+        "generated_date" : "2021-12-05"
+    },
+    {
+        "emp_id" : 5,
+        "month" : "Sep",
+        "year" : 2021,
+        "amount" : 21000,
+        "generated_date" : "2021-10-05"
+    }
+])
+
+db.employee.aggregate([
+    {
+        $lookup : {
+            from : "department",
+            localField : "dept_id",
+            foreignField : "dept_id",
+            as : "dept"
+        }
+    },
+    {
+        $lookup : {
+            from : "salary",
+            localField : "emp_id",
+            foreignField : "emp_id",
+            as : "salary"
+        }
+    }
+])
+
+db.salary.findOneAndUpdate(
+    {"emp_id" : 2}, 
+    { $set: { "amount" : 20000 }}
+)
+
+db.employee.findOneAndUpdate(
+    {"emp_id" : 5},
+    { $set: {"name" : "poojan"}}
+)
+
+db.department.findOneAndUpdate(
+    {"dept_id" : 3},
+    { $set: {"name" : "HR"}}
+)
+
+db.salary.remove(
+    {"emp_id" : 5}
+)
+
+db.employee.remove(
+    {"emp_id" : 5}
+)
+
+db.department.remove(
+    {"dept_id" : 1}
+)
